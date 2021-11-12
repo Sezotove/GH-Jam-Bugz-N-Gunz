@@ -1,0 +1,28 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://Scripts/Colony.gd" type="Script" id=1]
+[ext_resource path="res://Assets/colony_wall/colony_topwall/tileset_colony_topwall.tres" type="TileSet" id=2]
+[ext_resource path="res://Assets/colony_wall/colony_wall/tileset_colony_wall.tres" type="TileSet" id=3]
+[ext_resource path="res://Assets/colony_wall/colony_floor/tileset_colony_floor.tres" type="TileSet" id=4]
+
+[node name="Colony" type="Node2D"]
+script = ExtResource( 1 )
+walker_count = 1
+colony_size = "small"
+
+[node name="TopWall" type="TileMap" parent="."]
+tile_set = ExtResource( 2 )
+cell_size = Vector2( 16, 16 )
+format = 1
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = ExtResource( 4 )
+cell_size = Vector2( 16, 16 )
+cell_tile_origin = 1
+collision_mask = 0
+format = 1
+
+[node name="Wall" type="TileMap" parent="."]
+tile_set = ExtResource( 3 )
+cell_size = Vector2( 16, 16 )
+format = 1
