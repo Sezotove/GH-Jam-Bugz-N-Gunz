@@ -29,16 +29,27 @@ func _ready():
 	sizes.shuffle()
 	colony_size = sizes[0]
 	if colony_size == 'small':
-		WIDTH = 30
-		HEIGHT = 30
+		WIDTH = randi() % 50 + 30
+		HEIGHT = randi() % 50 + 30
 	elif colony_size == 'medium':
-		WIDTH = 75
-		HEIGHT = 75
+		WIDTH = randi() % 100 + 75
+		HEIGHT = randi() % 100 + 75
 	elif colony_size == 'large':
-		WIDTH = 150
-		HEIGHT = 150
+		WIDTH = randi() % 200 +150
+		HEIGHT = randi() % 200 +150
 	generate_colony(true)
 	player = Global.player
+	print(colony_size)
+
+func _process(delta):
+	if Input.is_action_just_pressed("hide"):
+		if $Wall.visible != false:
+			$Wall.hide()
+		else:
+			$Wall.show()
+	if Input.is_action_just_pressed("reload"):
+		get_tree().reload_current_scene()
+
 
 func clear_colony(value):
 	$TileMap.clear()
@@ -51,14 +62,14 @@ func generate_colony(value):
 	$TopWall.clear()
 	randomize()
 	if colony_size == 'small':
-		WIDTH = 75
-		HEIGHT = 75
+		WIDTH = randi() % 50 + 30
+		HEIGHT = randi() % 50 + 30
 	elif colony_size == 'medium':
-		WIDTH = 125
-		HEIGHT = 125
+		WIDTH = randi() % 100 + 75
+		HEIGHT = randi() % 100 + 75
 	elif colony_size == 'large':
-		WIDTH = 250
-		HEIGHT = 250
+		WIDTH = randi() % 200 +150
+		HEIGHT = randi() % 200 +150
 	var ground : TileMap = $TileMap
 	var wall_top : TileMap = $TopWall
 	var wall_base : TileMap = $Wall
@@ -72,7 +83,8 @@ func generate_colony(value):
 #	for x in range(colony_rect.position.x - 1, colony_rect.end.x + 1):
 #		for y in range(colony_rect.position.y - 1, colony_rect.end.y + 1):
 #			wall_base.set_cell(x, y, 0)
-	var steps = wall_top.get_used_cells().size()
+#	var steps = wall_top.get_used_cells().size()
+	var steps = randi() % 12000 + 7500
 	var startingx = round(rand_range(colony_rect.position.x, colony_rect.end.x))
 	var startingy = round(rand_range(colony_rect.position.y, colony_rect.end.y))
 #	var walker = DungeonWalker.new(starting_pos[0], borders)
@@ -108,7 +120,7 @@ func generate_colony(value):
 	var spawn_loc = ground.map_to_world(ground_cells[0])
 	yield(get_tree(), "idle_frame")
 	add_child(player)
-	add_child(Global.camera)
+#	add_child(Global.camera)
 	player.global_position = spawn_loc
 #	player.in_dungeon = true
 #	spawn_cells.clear()
