@@ -126,7 +126,7 @@ func shoot():
 	gun.shoot()
 	var bullet = bullet_scene.instance()#Global.instance_node_at_location(bullet, PersistentNodes, muzzle.global_position)
 	bullet.gun_rotation = gun.global_rotation
-	bullet.global_position = gun_muzzle.global_position
+		bullet.global_position = gun_muzzle.global_position
 	get_tree().root.add_child(bullet)
 
 func _on_RateOfFire_timeout():

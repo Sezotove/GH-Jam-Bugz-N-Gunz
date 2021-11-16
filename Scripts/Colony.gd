@@ -79,30 +79,25 @@ func generate_colony(value):
 #			wall_base.set_cellv(Vector2(x - WIDTH / 2, y - HEIGHT / 2), 0)
 	var colony_rect : Rect2 = wall_top.get_used_rect()
 	colony_rect = colony_rect.grow_individual(15, 15, 15, 15)
-#	var borders = $TileMap.get_used_rect()
-#	for x in range(colony_rect.position.x - 1, colony_rect.end.x + 1):
-#		for y in range(colony_rect.position.y - 1, colony_rect.end.y + 1):
-#			wall_base.set_cell(x, y, 0)
-#	var steps = wall_top.get_used_cells().size()
 	var steps = randi() % 12000 + 7500
 	var startingx = round(rand_range(colony_rect.position.x, colony_rect.end.x))
 	var startingy = round(rand_range(colony_rect.position.y, colony_rect.end.y))
-#	var walker = DungeonWalker.new(starting_pos[0], borders)
-	
 	for w in walker_count:
 		var walker = Walker.new(Vector2(startingx, startingy), colony_rect)
-		var colony = walker.walk(round(steps))
+		var colony = walker.walk(steps)
 		walker.queue_free()
 		for location in colony:
 			ground.set_cellv(location, TILES.floor)
-#			wall_base.set_cellv(location, -1)
 	var ground_cells = ground.get_used_cells()
+	#Loop through groud tiles and their location. If the tile above it is empty, set wall tiles at that location
 	for tile in ground_cells:
 		if ground.get_cellv(Vector2(tile.x, tile.y -1)) == -1:
 			wall_base.set_cellv(Vector2(tile.x, tile.y -1), 0)
 	for tile in wall_base.get_used_cells():
 		if ground.get_cellv(Vector2(tile.x, tile.y -1)) == 0:
-			ground.set_cellv(Vector2(tile.x, tile.y -1), -1)
+#			ground.set_cellv(Vector2(tile.x, tile.y -1), -1)
+			wall_base.set_cellv(Vector2(tile.x, tile.y), -1)
+
 	wall_top.clear()
 	colony_rect = ground.get_used_rect()
 	colony_rect = colony_rect.grow_individual(3, 3, 3, 3)
@@ -113,6 +108,11 @@ func generate_colony(value):
 	for tile in ground_cells:
 		if ground.get_cellv(tile) == 0:
 			wall_top.set_cellv(tile, -1)
+	for tile in wall_top.get_used_cells():
+		if ground.get_cellv(Vector2(tile.x, tile.y -1)) == 0 and ground.get_cellv(Vector2(tile.x, tile.y + 1)) == 0:
+			wall_top.set_cellv(tile, -1)
+			ground.set_cellv(tile, 0	)
+
 	wall_top.update_bitmask_region()
 	ground.update_bitmask_region()
 	wall_base.update_bitmask_region()
@@ -120,7 +120,7 @@ func generate_colony(value):
 	var spawn_loc = ground.map_to_world(ground_cells[0])
 	yield(get_tree(), "idle_frame")
 	add_child(player)
-#	add_child(Global.camera)
+	add_child(Global.camera)
 	player.global_position = spawn_loc
 #	player.in_dungeon = true
 #	spawn_cells.clear()
